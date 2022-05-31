@@ -51,7 +51,9 @@ class MyForm(QDialog):
 # STREFY ---------------------------------------------------------------------------------------
 
         """   
+        
         Funkcje dobierające parametry strefy dla układu 2000.
+        
         """
         
     def strefy(self):
@@ -147,7 +149,7 @@ class MyForm(QDialog):
         x00 = m * x
         y00 = m * y + (self.s*1000000) + 500000
         
-        self.ui.wynik10.setText('x = ' + str(x00) + ' ' + 'y = ' + str(y00))
+        self.ui.wynik10.setText('X = ' + str(round(x00,3)) + ', ' + 'Y = ' + str(round(y00,3)))
         
         
         
@@ -179,7 +181,7 @@ class MyForm(QDialog):
         x00 = m * x
         y00 = m * y + (self.s*1000000) + 500000
         
-        self.ui.wynikst.setText('x = ' + str(x00) + ' ' + 'y = ' + str(y00))
+        self.ui.wynikst.setText('X = ' + str(round(x00,3)) + ', ' + 'Y = ' + str(round(y00,3)))
         
         
 # Uklady 1992 ---------------------------------------------------------------------------------------   
@@ -219,7 +221,7 @@ class MyForm(QDialog):
         x92 = x * m - 5300000
         y92 = y * m + 500000
     
-        self.ui.wynik92.setText('x = ' + str(x92) + ' ' + 'y = ' + str(y92))
+        self.ui.wynik92.setText('X = ' + str(round(x92,3)) + ', ' + 'Y = ' + str(round(y92,3)))
         
     def uk92_tab2(self):
         lam0 = np.radians(19)
@@ -240,7 +242,7 @@ class MyForm(QDialog):
         x92 = x * m - 5300000
         y92 = y * m + 500000
     
-        self.ui.wynik92_2.setText('x = ' + str(x92) + ' ' + 'y = ' + str(y92))
+        self.ui.wynik92_2.setText('X = ' + str(round(x92,3)) + ', ' + 'Y = ' + str(round(y92,3)))
         
      
 # flh - XYZ ---------------------------------------------------------------------------------------      
@@ -251,7 +253,7 @@ class MyForm(QDialog):
 
         Parametry
         ----------
-        fi  : [float] : szerokość geodezyjna [rad]
+        fi  [float] : szerokość geodezyjna [rad]
         lam [float] : długość geodezyjna [rad]
         h   [float] : wysokość elipsoidalna [m]
         a   [float] : dłuższa półoś elipsoidy [m]
@@ -289,6 +291,8 @@ class MyForm(QDialog):
     
     """
     
+    Funkcja definiująca parametry elipsoidy w zależnosci od zaznaczonego "radioButtona"
+    
     """
     def elipsoida(self):
         if self.ui.WGS84.isChecked()==True:
@@ -308,29 +312,19 @@ class MyForm(QDialog):
     
     """
     
+    Funkcje wykonujące przeliczenia dla pierwszej zakładki (Stopnie dziesiętne)
+    
+    fi i lam przeliczane są do radianów
+    
     """
     
     def przelicz2000(self):
-        if self.ui.WGS84.isChecked()==True:
-            self.a = 6378137.0
-            self.b = 6356752.31424518
-            self.flattening = (self.a-self.b)/ self.a
-            self.ecc = 2*self.flattening - self.flattening**2
-            
-        if self.ui.GRS80.isChecked()==True:
-            self.a = 6378137.0
-            self.b = 6356752.31414036
-            self.flattening = (self.a-self.b)/ self.a
-            self.ecc = 2*self.flattening - self.flattening**2
-            
         if len(self.ui.FI.text()) != 0 and len(self.ui.LAM.text()) != 0:
             fi = (float(self.ui.FI.text())) * (m.pi/180)
             lam = (float(self.ui.LAM.text())) * (m.pi/180)
             
         self.uk00(fi,lam)
         
-
-
 
     def przelicz1992(self):
         if len(self.ui.FI.text()) != 0 and len(self.ui.LAM.text()) != 0:
@@ -353,21 +347,13 @@ class MyForm(QDialog):
    
     """
     
+    Funkcje wykonujące przeliczenia dla drugiej zakładki (Stopnie)
+    
+    fi i lam przeliczane są do radianów najpierw będąc konwertowane do stopni dziesiętnych
+    
     """
      
     def przelicz2000_tab2(self):
-        if self.ui.WGS84.isChecked()==True:
-            self.a = 6378137.0
-            self.b = 6356752.31424518
-            self.flattening = (self.a-self.b)/ self.a
-            self.ecc = 2*self.flattening - self.flattening**2
-            
-        if self.ui.GRS80.isChecked()==True:
-            self.a = 6378137.0
-            self.b = 6356752.31414036
-            self.flattening = (self.a-self.b)/ self.a
-            self.ecc = 2*self.flattening - self.flattening**2
-            
         if len(self.ui.fist.text()) != 0 and len(self.ui.fimin.text()) != 0 and len(self.ui.fisek.text()) != 0 and len(self.ui.lamst.text()) != 0 and len(self.ui.lammin.text()) != 0 and len(self.ui.lamsek.text()) != 0:
             fi = (float(self.ui.fist.text()) + (float(self.ui.fimin.text()))/60 + (float(self.ui.fisek.text()))/3600) * (m.pi/180)
             lam = (float(self.ui.lamst.text()) + (float(self.ui.lammin.text()))/60 + (float(self.ui.lamsek.text()))/3600) * (m.pi/180)
@@ -382,6 +368,7 @@ class MyForm(QDialog):
             self.lam = (float(self.ui.lamst.text()) + (float(self.ui.lammin.text()))/60 + (float(self.ui.lamsek.text()))/3600) * (m.pi/180)
             
         self.uk92_tab2()
+        
         
     def przeliczXYZ_tab2(self):
         if len(self.ui.fist.text()) != 0 and len(self.ui.fimin.text()) != 0 and len(self.ui.fisek.text()) != 0 and len(self.ui.lamst.text()) != 0 and len(self.ui.lammin.text()) != 0 and len(self.ui.lamsek.text()) != 0 and len(self.ui.Htab2.text()) != 0:
